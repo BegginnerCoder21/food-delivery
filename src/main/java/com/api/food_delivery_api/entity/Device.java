@@ -1,17 +1,14 @@
 package com.api.food_delivery_api.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "device")
-@Setter
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Data
 public class Device extends BaseEntity{
 
     @Id
