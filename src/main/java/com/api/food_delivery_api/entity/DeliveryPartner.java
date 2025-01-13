@@ -1,6 +1,6 @@
 package com.api.food_delivery_api.entity;
 
-import com.api.food_delivery_api.enumeration.UserType;
+import com.api.food_delivery_api.enumeration.VehicleType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,26 +9,29 @@ import lombok.Setter;
 
 import java.util.Date;
 
+
 @Entity
-@Table(name = "users")
+@Table(name = "delivery_partner")
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseEntity {
+public class DeliveryPartner extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true, nullable = false)
-    private String username;
     private String firstname;
     private String lastname;
-    private Date dateOfBirth;
+    @Column(nullable = false)
+    private String username;
+    @Column(nullable = false, unique = true)
     private String phoneNumber;
-    private String address;
+    private String gender;
+    private String password;
+    private Date dateOfBirth;
     private String email;
-    private UserType userType;
-    private String status;
-
+    private String address;
+    private VehicleType vehicleType;
+    private boolean available;
 }
