@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -93,7 +94,10 @@ public class UserServiceImpl implements UserService{
 
         this.userRepository.save(userUpdate);
 
-        UserResponse userResponse = UserResponse.builder()
+        UserResponse userResponse = this.modelMapper.map(userUpdate, UserResponse.class);
+
+        /*
+                UserResponse userResponse = UserResponse.builder()
                 .email(userUpdate.getEmail())
                 .userType(userUpdate.getUserType())
                 .id(userUpdate.getId())
@@ -105,6 +109,8 @@ public class UserServiceImpl implements UserService{
                 .lastname(userUpdate.getLastname())
                 .phoneNumber(userUpdate.getPhoneNumber())
                 .build();
+
+         */
 
         if(userUpdate.getDevices() != null)
         {
@@ -132,6 +138,7 @@ public class UserServiceImpl implements UserService{
                     this.deviceRepository.save(deviceUpdate);
 
                     userResponse.setDeviceResponse(List.of(UserResponse.DeviceResponse.builder()
+                            .id(deviceUpdate.getId())
                             .appVersion(deviceUpdate.getAppVersion())
                             .deviceId(deviceUpdate.getDeviceId())
                             .deviceModel(deviceUpdate.getDeviceModel())
@@ -143,6 +150,9 @@ public class UserServiceImpl implements UserService{
                     return userResponse;
                 }
 
+                Device creatingDevice = this.modelMapper.map(deviceRequest, Device.class);
+
+                /*
                 Device creatingDevice = Device.builder()
                         .deviceId(deviceRequest.getDeviceId())
                         .deviceModel(deviceRequest.getDeviceModel())
@@ -152,6 +162,8 @@ public class UserServiceImpl implements UserService{
                         .deviceType(deviceRequest.getDeviceType())
                         .user(userUpdate)
                         .build();
+
+                 */
 
                 this.deviceRepository.save(creatingDevice);
 
@@ -193,35 +205,63 @@ public class UserServiceImpl implements UserService{
 
         List<UserResponse.DeviceResponse> deviceResponsesList = foundUser.getDevices()
                 .stream()
-                .filter(device -> device.getUser().getId().equals(id))
-                .map(device -> UserResponse.DeviceResponse.builder()
-                        .id(device.getId())
-                        .deviceId(device.getDeviceId())
-                        .deviceType(device.getDeviceType())
-                        .deviceModel(device.getDeviceModel())
-                        .osVersion(device.getOsVersion())
-                        .appVersion(device.getAppVersion())
-                        .isTrusted(device.isTrusted())
-                        .build())
+                .map(device -> this.modelMapper.map(device, UserResponse.DeviceResponse.class))
                 .toList();
 
-        return UserResponse.builder()
-                .id(foundUser.getId())
-                .address(foundUser.getAddress())
-                .status(foundUser.getStatus())
-                .email(foundUser.getEmail())
-                .dateOfBirth(foundUser.getDateOfBirth())
-                .userType(foundUser.getUserType())
-                .firstname(foundUser.getFirstname())
-                .username(foundUser.getUsername())
-                .lastname(foundUser.getLastname())
-                .phoneNumber(foundUser.getPhoneNumber())
-                .deviceResponse(deviceResponsesList)
-                .build();
+        UserResponse userResponse = this.modelMapper.map(foundUser, UserResponse.class);
+
+        userResponse.setDeviceResponse(deviceResponsesList);
+
+        return userResponse;
     }
 
     @Override
     public List<UserResponse> allUser() {
-        return List.of();
+
+        List<User> users = this.userRepository.findAll();
+
+        List<UserResponse> userResponseList = new ArrayList<>();
+        for (User user: users)
+        {
+
+            UserResponse userResponse = this.modelMapper.map(user, UserResponse.class);
+
+            List<UserResponse.DeviceResponse> deviceResponsesList = user.getDevices()
+                    .stream()
+                    .map(device -> this.modelMapper.map(device, UserResponse.DeviceResponse.class))
+                    .toList();
+
+            userResponse.setDeviceResponse(deviceResponsesList);
+
+            userResponseList.add(userResponse);
+
+            /*
+
+            userResponse.getDeviceResponse().addAll(user.getDevices().stream().map(device -> this.modelMapper.map(device, UserResponse.DeviceResponse.class)).toList());
+
+            List<UserResponse.DeviceResponse> deviceResponsesList = user.getDevices()
+                    .stream()
+                    .map(device -> this.modelMapper.map(device, UserResponse.DeviceResponse.class))
+                    .toList();
+
+            UserResponse userResponse = UserResponse.builder()
+                    .id(user.getId())
+                    .userType(user.getUserType())
+                    .firstname(user.getFirstname())
+                    .address(user.getAddress())
+                    .username(user.getUsername())
+                    .lastname(user.getLastname())
+                    .email(user.getEmail())
+                    .status(user.getStatus())
+                    .dateOfBirth(user.getDateOfBirth())
+                    .phoneNumber(user.getPhoneNumber())
+                    .deviceResponse(deviceResponsesList)
+                    .build();
+
+             */
+
+        }
+
+        return userResponseList;
     }
 }
