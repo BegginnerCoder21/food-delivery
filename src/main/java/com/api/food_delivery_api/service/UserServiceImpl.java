@@ -10,14 +10,15 @@ import com.api.food_delivery_api.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -38,6 +39,8 @@ public class UserServiceImpl implements UserService{
         UserUtils.phoneNumberNotEmpty(userRequest.getPhoneNumber());
 
         User user = this.modelMapper.map(userRequest, User.class);
+        user.setCreatedAt(new Date());
+
         this.userRepository.save(user);
 
         this.saveDevice(userRequest, user);
@@ -91,6 +94,7 @@ public class UserServiceImpl implements UserService{
         userUpdate.setFirstname(userRequest.getFirstname());
         userUpdate.setPhoneNumber(userRequest.getPhoneNumber());
         userUpdate.setStatus(userRequest.getStatus());
+        userUpdate.setUpdatedAt(new Date());
 
         this.userRepository.save(userUpdate);
 
@@ -151,6 +155,7 @@ public class UserServiceImpl implements UserService{
                 }
 
                 Device creatingDevice = this.modelMapper.map(deviceRequest, Device.class);
+                creatingDevice.setUser(userUpdate);
 
                 /*
                 Device creatingDevice = Device.builder()
@@ -187,8 +192,15 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserResponse delete(Long id) {
-        return null;
+    public ResponseEntity delete(Long id) {
+
+        boolean userExist = this.userRepository.existsById(id);
+        if(!userExist){
+            throw new IllegalArgumentException("Utilisateur que vous voulez supprimer n'existe pas !");
+        }
+
+        this.userRepository.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     @Override
