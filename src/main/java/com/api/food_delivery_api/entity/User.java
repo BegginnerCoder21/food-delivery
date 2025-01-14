@@ -5,12 +5,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Setter
-@Getter
-@ToString
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {
@@ -33,5 +33,8 @@ public class User extends BaseEntity {
     private String email;
     private UserType userType;
     private String status;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<Device> devices;
 
 }

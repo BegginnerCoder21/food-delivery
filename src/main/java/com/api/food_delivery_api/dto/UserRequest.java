@@ -27,11 +27,11 @@ public class UserRequest {
     private String status;
     private DeviceRequest deviceRequest;
 
-
+    @Setter
+    @Getter
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Data
     public static class DeviceRequest{
 
         private String deviceId;
