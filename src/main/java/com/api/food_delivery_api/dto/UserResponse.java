@@ -1,10 +1,10 @@
 package com.api.food_delivery_api.dto;
 
 import com.api.food_delivery_api.enumeration.UserType;
-import jakarta.persistence.Column;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter
@@ -23,4 +23,23 @@ public class UserResponse {
     private String email;
     private UserType userType;
     private String status;
+    private List<DeviceResponse> deviceResponse;
+
+
+    @Setter
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class DeviceResponse{
+
+        private Long id;
+        private String deviceId;
+        private String deviceType;
+        private String deviceModel;
+        private String osVersion;
+        private String appVersion;
+        private boolean isTrusted;
+
+    }
 }

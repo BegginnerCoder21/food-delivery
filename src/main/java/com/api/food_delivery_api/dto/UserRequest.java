@@ -40,7 +40,6 @@ public class UserRequest {
         private String osVersion;
         private String appVersion;
         private boolean isTrusted;
-        private User user;
 
     }
 }

@@ -1,14 +1,12 @@
 package com.api.food_delivery_api.controller;
 
 import com.api.food_delivery_api.dto.UserRequest;
+import com.api.food_delivery_api.dto.UserResponse;
 import com.api.food_delivery_api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/food-delivery/")
@@ -31,6 +29,30 @@ public class UserController {
             throw new RuntimeException(e.getMessage());
         }
         catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @PutMapping("/update-user/{id}")
+    public UserResponse update(@PathVariable Long id,@RequestBody UserRequest userRequest)
+    {
+        return this.userService.update(id, userRequest);
+    }
+
+    @GetMapping("/find-user/{id}")
+    public UserResponse findUser(@PathVariable Long id)
+    {
+        try {
+
+            return this.userService.findById(id);
+
+        } catch (IllegalArgumentException e) {
+
+            throw new RuntimeException(e.getMessage());
+
+        } catch (Exception e) {
+
             throw new RuntimeException(e);
         }
 

@@ -3,6 +3,7 @@ package com.api.food_delivery_api.entity;
 import com.api.food_delivery_api.enumeration.UserType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.commons.lang3.builder.ToStringExclude;
 
 import java.util.Date;
 import java.util.List;

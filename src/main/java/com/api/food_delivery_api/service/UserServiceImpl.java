@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -48,6 +49,7 @@ public class UserServiceImpl implements UserService{
     {
         if(user.getId() != null)
         {
+
             final UserRequest.DeviceRequest deviceRequest = userRequest.getDeviceRequest();
             Device model = Device.builder()
                     .deviceId(deviceRequest.getDeviceId())
@@ -56,11 +58,12 @@ public class UserServiceImpl implements UserService{
                     .osVersion(deviceRequest.getOsVersion())
                     .isTrusted(deviceRequest.isTrusted())
                     .deviceType(deviceRequest.getDeviceType())
-                    .user(deviceRequest.getUser())
+                    .user(user)
                     .build();
 
+            System.out.println("here " + user);
             this.deviceRepository.save(model);
-            System.out.println("ici " + model);
+
         }
     }
 
@@ -90,6 +93,19 @@ public class UserServiceImpl implements UserService{
 
         this.userRepository.save(userUpdate);
 
+        UserResponse userResponse = UserResponse.builder()
+                .email(userUpdate.getEmail())
+                .userType(userUpdate.getUserType())
+                .id(userUpdate.getId())
+                .status(userUpdate.getStatus())
+                .address(userUpdate.getAddress())
+                .dateOfBirth(userUpdate.getDateOfBirth())
+                .firstname(userUpdate.getFirstname())
+                .username(userUpdate.getUsername())
+                .lastname(userUpdate.getLastname())
+                .phoneNumber(userUpdate.getPhoneNumber())
+                .build();
+
         if(userUpdate.getDevices() != null)
         {
             final UserRequest.DeviceRequest deviceRequest = userRequest.getDeviceRequest();
@@ -115,7 +131,16 @@ public class UserServiceImpl implements UserService{
 
                     this.deviceRepository.save(deviceUpdate);
 
-                    return UserResponse.builder().build();
+                    userResponse.setDeviceResponse(List.of(UserResponse.DeviceResponse.builder()
+                            .appVersion(deviceUpdate.getAppVersion())
+                            .deviceId(deviceUpdate.getDeviceId())
+                            .deviceModel(deviceUpdate.getDeviceModel())
+                            .isTrusted(deviceUpdate.isTrusted())
+                            .osVersion(deviceUpdate.getOsVersion())
+                            .deviceType(deviceUpdate.getDeviceType())
+                            .build()));
+
+                    return userResponse;
                 }
 
                 Device creatingDevice = Device.builder()
@@ -130,14 +155,23 @@ public class UserServiceImpl implements UserService{
 
                 this.deviceRepository.save(creatingDevice);
 
-                return UserResponse.builder().build();
+                userResponse.setDeviceResponse(List.of(UserResponse.DeviceResponse.builder()
+                        .appVersion(creatingDevice.getAppVersion())
+                        .deviceId(creatingDevice.getDeviceId())
+                        .deviceModel(creatingDevice.getDeviceModel())
+                        .isTrusted(creatingDevice.isTrusted())
+                        .osVersion(creatingDevice.getOsVersion())
+                        .deviceType(creatingDevice.getDeviceType())
+                        .build()));
+
+                return userResponse;
             }
 
             throw new IllegalArgumentException("L'id de l'appareil ne doit pas être vide");
 
         }
 
-        return UserResponse.builder().build();
+        return userResponse;
     }
 
     @Override
@@ -146,8 +180,44 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserResponse findById(Long id) {
-        return null;
+    public UserResponse findById(Long id)
+    {
+        Optional<User> user = this.userRepository.findById(id);
+
+        if (user.isEmpty())
+        {
+            throw new IllegalArgumentException("Aucun utilisateur trouvé !");
+        }
+
+        User foundUser = user.get();
+
+        List<UserResponse.DeviceResponse> deviceResponsesList = foundUser.getDevices()
+                .stream()
+                .filter(device -> device.getUser().getId().equals(id))
+                .map(device -> UserResponse.DeviceResponse.builder()
+                        .id(device.getId())
+                        .deviceId(device.getDeviceId())
+                        .deviceType(device.getDeviceType())
+                        .deviceModel(device.getDeviceModel())
+                        .osVersion(device.getOsVersion())
+                        .appVersion(device.getAppVersion())
+                        .isTrusted(device.isTrusted())
+                        .build())
+                .toList();
+
+        return UserResponse.builder()
+                .id(foundUser.getId())
+                .address(foundUser.getAddress())
+                .status(foundUser.getStatus())
+                .email(foundUser.getEmail())
+                .dateOfBirth(foundUser.getDateOfBirth())
+                .userType(foundUser.getUserType())
+                .firstname(foundUser.getFirstname())
+                .username(foundUser.getUsername())
+                .lastname(foundUser.getLastname())
+                .phoneNumber(foundUser.getPhoneNumber())
+                .deviceResponse(deviceResponsesList)
+                .build();
     }
 
     @Override
