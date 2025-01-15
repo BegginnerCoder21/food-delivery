@@ -4,10 +4,7 @@ package com.api.food_delivery_api.entity;
 import com.api.food_delivery_api.enumeration.PaymentMethod;
 import com.api.food_delivery_api.enumeration.PaymentStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -17,6 +14,7 @@ import java.math.BigDecimal;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Payment extends BaseEntity{
 
     @Id
