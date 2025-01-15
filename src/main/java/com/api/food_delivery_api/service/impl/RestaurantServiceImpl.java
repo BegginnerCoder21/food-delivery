@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
@@ -96,6 +95,16 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public RestaurantResponse getById(Long id) {
-        return null;
+
+        boolean restaurantExist = this.restaurantRepository.existsById(id);
+
+        if(!restaurantExist)
+        {
+            return RestaurantResponse.builder().build();
+        }
+
+        Restaurant restaurant = this.restaurantRepository.findById(id).get();
+
+        return this.modelMapper.map(restaurant, RestaurantResponse.class);
     }
 }
