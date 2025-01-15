@@ -24,4 +24,10 @@ public class RestaurantController {
     {
         return this.restaurantService.update(id, restaurantRequest);
     }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id)
+    {
+        this.restaurantService.delete(id);
+    }
 }
