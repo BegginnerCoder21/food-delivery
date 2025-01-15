@@ -11,6 +11,7 @@ import java.util.Date;
 @Table(name = "delivery_partner")
 @Setter
 @Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
