@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -97,7 +98,18 @@ public class DeliveryPartnerImpl implements DeliveryPartnerService {
 
     @Override
     public List<DeliveryPartnerResponse> getAll() {
-        return List.of();
+
+        List<DeliveryPartner> allDeliveryPartner = this.deliveryPartnerRepository.findAll();
+
+        List<DeliveryPartnerResponse> deliveryPartnerList = new ArrayList<>();
+
+        for (DeliveryPartner deliveryPartner : allDeliveryPartner){
+
+            DeliveryPartnerResponse deliveryPartnerResponse = this.modelMapper.map(deliveryPartner, DeliveryPartnerResponse.class);
+            deliveryPartnerList.add(deliveryPartnerResponse);
+        }
+
+        return deliveryPartnerList;
     }
 
     @Override
