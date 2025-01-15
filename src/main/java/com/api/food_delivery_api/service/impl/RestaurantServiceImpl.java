@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
@@ -41,8 +42,28 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public RestaurantResponse update(Long id, RestaurantRequest deliveryPartnerRequest) {
-        return null;
+    public RestaurantResponse update(Long id, RestaurantRequest restaurantRequest) {
+
+        try {
+
+            boolean restaurantExist = this.restaurantRepository.existsById(id);
+
+            if (!restaurantExist)
+            {
+                return RestaurantResponse.builder().build();
+            }
+
+            Restaurant restaurant = this.restaurantRepository.findById(id).get();
+
+            this.modelMapper.map(restaurantRequest, restaurant);
+
+            this.restaurantRepository.save(restaurant);
+
+            return this.modelMapper.map(restaurant, RestaurantResponse.class);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override

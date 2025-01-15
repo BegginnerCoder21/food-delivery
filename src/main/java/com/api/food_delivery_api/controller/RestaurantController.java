@@ -4,10 +4,7 @@ import com.api.food_delivery_api.dto.RestaurantRequest;
 import com.api.food_delivery_api.dto.RestaurantResponse;
 import com.api.food_delivery_api.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/food-delivery/restaurant")
@@ -20,5 +17,11 @@ public class RestaurantController {
     public RestaurantResponse create(@RequestBody RestaurantRequest restaurantRequest)
     {
         return this.restaurantService.create(restaurantRequest);
+    }
+
+    @PutMapping("/{id}")
+    public RestaurantResponse update(@PathVariable Long id,@RequestBody RestaurantRequest restaurantRequest)
+    {
+        return this.restaurantService.update(id, restaurantRequest);
     }
 }
