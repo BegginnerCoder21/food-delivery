@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,7 +83,15 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public List<RestaurantResponse> getAll() {
-        return List.of();
+
+        List<Restaurant> restaurants = this.restaurantRepository.findAll();
+        List<RestaurantResponse> restaurantResponsesList= new ArrayList<>();
+        for (Restaurant restaurant: restaurants)
+        {
+            RestaurantResponse restaurantResponse = this.modelMapper.map(restaurant, RestaurantResponse.class);
+            restaurantResponsesList.add(restaurantResponse);
+        }
+        return restaurantResponsesList;
     }
 
     @Override

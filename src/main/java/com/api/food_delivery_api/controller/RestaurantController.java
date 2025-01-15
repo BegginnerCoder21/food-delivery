@@ -6,6 +6,8 @@ import com.api.food_delivery_api.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/food-delivery/restaurant")
 public class RestaurantController {
@@ -29,5 +31,12 @@ public class RestaurantController {
     public void delete(@PathVariable Long id)
     {
         this.restaurantService.delete(id);
+    }
+
+
+    @GetMapping("")
+    public List<RestaurantResponse> getAll()
+    {
+        return this.restaurantService.getAll();
     }
 }
