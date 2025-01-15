@@ -1,4 +1,4 @@
-package com.api.food_delivery_api.service;
+package com.api.food_delivery_api.service.impl;
 
 import com.api.food_delivery_api.dto.UserRequest;
 import com.api.food_delivery_api.dto.UserResponse;
@@ -6,6 +6,7 @@ import com.api.food_delivery_api.entity.Device;
 import com.api.food_delivery_api.entity.User;
 import com.api.food_delivery_api.repository.DeviceRepository;
 import com.api.food_delivery_api.repository.UserRepository;
+import com.api.food_delivery_api.service.UserService;
 import com.api.food_delivery_api.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -22,7 +23,7 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private ModelMapper modelMapper;

@@ -1,4 +1,4 @@
-package com.api.food_delivery_api.service.handler;
+package com.api.food_delivery_api.service.handler.payments;
 
 
 import com.api.food_delivery_api.dto.PaymentRequest;

@@ -1,12 +1,13 @@
-package com.api.food_delivery_api.service;
+package com.api.food_delivery_api.service.impl;
 
 import com.api.food_delivery_api.dto.PaymentRequest;
 import com.api.food_delivery_api.entity.Payment;
 import com.api.food_delivery_api.enumeration.PaymentStatus;
 import com.api.food_delivery_api.repository.PaymentRepository;
-import com.api.food_delivery_api.service.handler.BankHandlerPayment;
-import com.api.food_delivery_api.service.handler.CardHandlerPayment;
-import com.api.food_delivery_api.service.handler.CashHandlerPayment;
+import com.api.food_delivery_api.service.PaymentService;
+import com.api.food_delivery_api.service.handler.payments.BankHandlerPayment;
+import com.api.food_delivery_api.service.handler.payments.CardHandlerPayment;
+import com.api.food_delivery_api.service.handler.payments.CashHandlerPayment;
 import com.api.food_delivery_api.utils.PaymentUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import org.springframework.util.StringUtils;
 import java.util.Date;
 
 @Slf4j
-public class PaymentServiceImpl implements PaymentService{
+public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     private BankHandlerPayment bankHandlerPayment;
