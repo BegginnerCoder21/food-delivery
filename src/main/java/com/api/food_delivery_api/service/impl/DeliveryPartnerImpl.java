@@ -114,6 +114,15 @@ public class DeliveryPartnerImpl implements DeliveryPartnerService {
 
     @Override
     public DeliveryPartnerResponse getById(Long id) {
-        return null;
+
+        boolean deliveryPartnerExist = this.deliveryPartnerRepository.existsById(id);
+
+        if(!deliveryPartnerExist)
+        {
+            return DeliveryPartnerResponse.builder().build();
+        }
+        DeliveryPartner deliveryPartner = this.deliveryPartnerRepository.findById(id).get();
+
+        return this.modelMapper.map(deliveryPartner, DeliveryPartnerResponse.class);
     }
 }

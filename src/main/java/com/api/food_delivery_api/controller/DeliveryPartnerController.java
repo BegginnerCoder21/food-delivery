@@ -38,4 +38,10 @@ public class DeliveryPartnerController {
     {
         return this.deliveryPartnerService.getAll();
     }
+
+    @GetMapping("/delivery-partner/{id}")
+    public DeliveryPartnerResponse getById(@PathVariable Long id)
+    {
+        return this.deliveryPartnerService.getById(id);
+    }
 }
