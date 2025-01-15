@@ -85,6 +85,14 @@ public class DeliveryPartnerImpl implements DeliveryPartnerService {
     @Override
     public void delete(Long id) {
 
+        boolean deliveryPartner = this.deliveryPartnerRepository.existsById(id);
+
+        if (!deliveryPartner)
+        {
+            return;
+        }
+
+        this.deliveryPartnerRepository.deleteById(id);
     }
 
     @Override

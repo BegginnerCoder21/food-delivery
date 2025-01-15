@@ -24,4 +24,10 @@ public class DeliveryPartnerController {
     {
         return this.deliveryPartnerService.update(id, deliveryPartnerRequest);
     }
+
+    @DeleteMapping("/delivery-partner/{id}")
+    public void delete(Long id)
+    {
+        this.deliveryPartnerService.delete(id);
+    }
 }
