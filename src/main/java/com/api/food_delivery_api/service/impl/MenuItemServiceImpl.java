@@ -59,7 +59,38 @@ public class MenuItemServiceImpl implements MenuItemService {
 
     @Override
     public MenuItemResponse update(Long id, MenuItemRequest menuItemRequest) {
-        return null;
+
+        log.info("donnée envoyé {}",menuItemRequest);
+        boolean menuItemExist = this.menuItemRepository.existsById(id);
+        boolean restaurantExist = this.restaurantRepository.existsById(menuItemRequest.getRestaurantId());
+
+        if(!menuItemExist)
+        {
+            log.info("menu item avec l'id {} non trouvé.", id);
+            return MenuItemResponse.builder().build();
+        }
+
+        if(!restaurantExist)
+        {
+            log.info("restaurant avec l'id {} non trouvé.", menuItemRequest.getRestaurantId());
+            return MenuItemResponse.builder().build();
+        }
+
+        Restaurant foundRestaurant = this.restaurantRepository.findById(menuItemRequest.getRestaurantId()).get();
+        MenuItem menuItemUpdate = this.menuItemRepository.findById(id).get();
+
+       menuItemUpdate.setCode(menuItemRequest.getCode());
+       menuItemUpdate.setPrice(menuItemRequest.getPrice());
+       menuItemUpdate.setName(menuItemRequest.getName());
+       menuItemUpdate.setAvailability(menuItemRequest.getAvailability());
+       menuItemUpdate.setDescription(menuItemRequest.getDescription());
+       menuItemUpdate.setUpdatedAt(new Date());
+       menuItemUpdate.setRestaurant(foundRestaurant);
+
+       this.menuItemRepository.save(menuItemUpdate);
+        log.info("Mise à jour de {} effectuée avec succès.", menuItemUpdate);
+
+        return this.modelMapper.map(menuItemUpdate, MenuItemResponse.class);
     }
 
     @Override
