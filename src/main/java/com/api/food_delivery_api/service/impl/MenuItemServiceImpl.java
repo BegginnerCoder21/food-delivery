@@ -123,6 +123,17 @@ public class MenuItemServiceImpl implements MenuItemService {
 
     @Override
     public MenuItemResponse getById(Long id) {
-        return null;
+
+        boolean menuItemExist = this.menuItemRepository.existsById(id);
+
+        if(!menuItemExist)
+        {
+            log.info("menu item avec l'id {} non trouvé.", id);
+            return MenuItemResponse.builder().build();
+        }
+
+        MenuItem foundMenuItem = this.menuItemRepository.findById(id).get();
+
+        return this.modelMapper.map(foundMenuItem, MenuItemResponse.class);
     }
 }

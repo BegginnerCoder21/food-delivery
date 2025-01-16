@@ -38,4 +38,10 @@ public class MenuItemController {
     {
         return this.menuItemService.getAll();
     }
+
+    @GetMapping("/{id}")
+    public MenuItemResponse getById(@PathVariable Long id)
+    {
+        return this.menuItemService.getById(id);
+    }
 }
