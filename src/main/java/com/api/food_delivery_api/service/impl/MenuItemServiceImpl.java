@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -114,7 +115,10 @@ public class MenuItemServiceImpl implements MenuItemService {
 
     @Override
     public List<MenuItemResponse> getAll() {
-        return List.of();
+
+        List<MenuItem> menuItems = this.menuItemRepository.findAll();
+
+        return menuItems.stream().map(menuItem -> this.modelMapper.map(menuItem, MenuItemResponse.class)).toList();
     }
 
     @Override

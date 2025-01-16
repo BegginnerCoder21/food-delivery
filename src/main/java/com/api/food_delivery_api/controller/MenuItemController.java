@@ -6,6 +6,8 @@ import com.api.food_delivery_api.service.MenuItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/food-delivery/menu-item")
 public class MenuItemController {
@@ -29,5 +31,11 @@ public class MenuItemController {
     public void delete(@PathVariable Long id)
     {
         this.menuItemService.delete(id);
+    }
+
+    @GetMapping("")
+    public List<MenuItemResponse> getAll()
+    {
+        return this.menuItemService.getAll();
     }
 }
