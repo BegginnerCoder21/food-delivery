@@ -1,10 +1,7 @@
 package com.api.food_delivery_api.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -12,6 +9,8 @@ import java.math.BigDecimal;
 @Table(name = "menu_item")
 @Setter
 @Getter
+@ToString
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class MenuItem extends BaseEntity{

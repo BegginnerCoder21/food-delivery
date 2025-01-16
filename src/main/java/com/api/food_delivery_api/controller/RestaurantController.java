@@ -41,7 +41,7 @@ public class RestaurantController {
     }
 
     @GetMapping("{id}")
-    public RestaurantResponse getByid(@PathVariable Long id)
+    public RestaurantResponse getById(@PathVariable Long id)
     {
         return this.restaurantService.getById(id);
     }
