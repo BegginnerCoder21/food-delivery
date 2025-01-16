@@ -24,4 +24,10 @@ public class MenuItemController {
     {
         return this.menuItemService.update(id, menuItemRequest);
     }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id)
+    {
+        this.menuItemService.delete(id);
+    }
 }
