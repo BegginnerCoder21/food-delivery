@@ -6,6 +6,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Setter
 @Getter
@@ -20,4 +21,6 @@ public class MenuItemRequest {
     private BigDecimal price;
     private Integer availability;
     private Long restaurantId;
+
+    private List<MenuItemPhotoRequest> menuItemPhotoRequests;
 }

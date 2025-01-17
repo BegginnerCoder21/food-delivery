@@ -1,10 +1,7 @@
 package com.api.food_delivery_api.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 @Entity
@@ -13,6 +10,8 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@Builder
 public class MenuItemPhoto extends BaseEntity{
 
     @Id
@@ -22,10 +21,11 @@ public class MenuItemPhoto extends BaseEntity{
     private String fileFormat;
     private String fileSize;
     private String smallUrl;
+    private String fileName;
     private String mediumUrl;
     private String largeUrl;
     private String uploadedBy;
     private String status;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
     private MenuItem menuItem;
 }

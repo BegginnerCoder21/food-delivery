@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "menu_item")
@@ -25,4 +26,6 @@ public class MenuItem extends BaseEntity{
     private Integer availability;
     @ManyToOne(fetch = FetchType.LAZY)
     private Restaurant restaurant;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "menuItem")
+    List<MenuItemPhoto> menuItemPhotos;
 }

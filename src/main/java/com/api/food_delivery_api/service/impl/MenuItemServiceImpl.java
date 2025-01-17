@@ -7,6 +7,8 @@ import com.api.food_delivery_api.entity.Restaurant;
 import com.api.food_delivery_api.repository.MenuItemRepository;
 import com.api.food_delivery_api.repository.RestaurantRepository;
 import com.api.food_delivery_api.service.MenuItemService;
+import com.api.food_delivery_api.service.handler.menuitemphoto.MenuItemHandler;
+import com.api.food_delivery_api.service.handler.menuitemphoto.MenuItemPhotoHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +28,19 @@ public class MenuItemServiceImpl implements MenuItemService {
     private MenuItemRepository menuItemRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private MenuItemHandler menuItemHandler;
+    @Autowired
+    private MenuItemPhotoHandler menuItemPhotoHandler;
 
     @Override
     public MenuItemResponse create(MenuItemRequest menuItemRequest) {
+
+        if(!this.menuItemHandler.verifyMenuItemPhoto(menuItemRequest))
+        {
+            log.info("Aucune photo trouvé!");
+            return MenuItemResponse.builder().build();
+        }
 
         boolean restaurantExist = this.restaurantRepository.existsById(menuItemRequest.getRestaurantId());
 
@@ -52,8 +64,9 @@ public class MenuItemServiceImpl implements MenuItemService {
         menuItemCreating.setCreatedBy("SYSTEM");
 
         this.menuItemRepository.save(menuItemCreating);
-
         log.info("Enregistrement de {} effectué avec succès.", menuItemCreating);
+
+        this.menuItemPhotoHandler.uploadFileByMenuItem(menuItemCreating, menuItemRequest.getMenuItemPhotoRequests());
 
         return this.modelMapper.map(menuItemCreating, MenuItemResponse.class);
     }
@@ -90,7 +103,6 @@ public class MenuItemServiceImpl implements MenuItemService {
             menuItemUpdate.setRestaurant(foundRestaurant);
 
             this.menuItemRepository.save(menuItemUpdate);
-            log.info("Mise à jour de {} effectuée avec succès.", menuItemUpdate);
 
             return this.modelMapper.map(menuItemUpdate, MenuItemResponse.class);
         } catch (Exception e) {
