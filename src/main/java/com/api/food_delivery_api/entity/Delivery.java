@@ -2,10 +2,7 @@ package com.api.food_delivery_api.entity;
 
 import com.api.food_delivery_api.enumeration.DeliveryStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -15,6 +12,7 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Delivery extends BaseEntity{
 
     @Id

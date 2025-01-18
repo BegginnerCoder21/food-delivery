@@ -25,6 +25,6 @@ public class OrderRequest {
     private OrderStatus orderStatus;
     private Long userId;
     private Long restaurantId;
-    private List<OrderItemRequest> orderItem;
+    private List<OrderItemRequest> orderItemRequests;
     private PaymentRequest paymentRequest;
 }

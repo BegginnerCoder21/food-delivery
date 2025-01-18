@@ -3,6 +3,7 @@ package com.api.food_delivery_api.controller;
 import com.api.food_delivery_api.dto.UserRequest;
 import com.api.food_delivery_api.dto.UserResponse;
 import com.api.food_delivery_api.service.UserService;
+import com.api.food_delivery_api.utils.ApiResponseUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +21,13 @@ public class UserController {
 
 
     @PostMapping("/register-user")
-    public ResponseEntity create(@RequestBody UserRequest userRequest)
+    public ResponseEntity<Object> create(@RequestBody UserRequest userRequest)
     {
         try {
 
-            this.userService.create(userRequest);
+            var userCreatingSuccess = this.userService.create(userRequest);
 
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(ApiResponseUtils.successResponse(userCreatingSuccess));
         } catch (IllegalArgumentException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -48,6 +49,7 @@ public class UserController {
         try {
 
             return this.userService.findById(id);
+
 
         } catch (IllegalArgumentException e) {
 

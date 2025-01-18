@@ -13,5 +13,5 @@ public class OrderItemRequest {
 
     private Integer quantity;
     private double price;
-    private List<OrderMenuItemRequest> menuItemRequests;
+    private List<OrderMenuItemRequest> orderMenuItemRequests;
 }

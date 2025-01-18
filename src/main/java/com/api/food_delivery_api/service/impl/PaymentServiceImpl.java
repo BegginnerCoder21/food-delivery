@@ -1,5 +1,6 @@
 package com.api.food_delivery_api.service.impl;
 
+import com.api.food_delivery_api.constante.Constant;
 import com.api.food_delivery_api.dto.PaymentRequest;
 import com.api.food_delivery_api.entity.Payment;
 import com.api.food_delivery_api.enumeration.PaymentStatus;
@@ -11,11 +12,13 @@ import com.api.food_delivery_api.service.handler.payments.CashHandlerPayment;
 import com.api.food_delivery_api.utils.PaymentUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
 
 @Slf4j
+@Service
 public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
@@ -28,7 +31,7 @@ public class PaymentServiceImpl implements PaymentService {
     private CashHandlerPayment cashHandlerPayment;
 
     @Override
-    public String pay(PaymentRequest paymentRequest) {
+    public PaymentStatus pay(PaymentRequest paymentRequest) {
 
         String payMethod = paymentRequest.getPaymentMethod().toString();
         if(PaymentUtils.BANK.equalsIgnoreCase(payMethod))
@@ -39,10 +42,10 @@ public class PaymentServiceImpl implements PaymentService {
 
             if(StringUtils.hasText(response))
             {
-                return PaymentStatus.SUCCESS.toString();
+                return PaymentStatus.SUCCESS;
             }
 
-            return PaymentStatus.FAILED.toString();
+            return PaymentStatus.FAILED;
         }
 
         if(PaymentUtils.CARD.equalsIgnoreCase(payMethod))
@@ -53,10 +56,10 @@ public class PaymentServiceImpl implements PaymentService {
 
             if(StringUtils.hasText(response))
             {
-                return PaymentStatus.SUCCESS.toString();
+                return PaymentStatus.SUCCESS;
             }
 
-            return PaymentStatus.FAILED.toString();
+            return PaymentStatus.FAILED;
         }
 
         if(PaymentUtils.CASH.equalsIgnoreCase(payMethod))
@@ -67,13 +70,13 @@ public class PaymentServiceImpl implements PaymentService {
 
             if(StringUtils.hasText(response))
             {
-                return PaymentStatus.SUCCESS.toString();
+                return PaymentStatus.SUCCESS;
             }
 
-            return PaymentStatus.FAILED.toString();
+            return PaymentStatus.FAILED;
         }
 
-        return "";
+        return PaymentStatus.FAILED;
     }
 
     @Override
@@ -87,9 +90,8 @@ public class PaymentServiceImpl implements PaymentService {
 
         payment.setPaymentMethod(paymentRequest.getPaymentMethod());
         payment.setAmount(paymentRequest.getAmount());
-        payment.setOrderId(paymentRequest.getOrderId());
         payment.setCreatedAt(new Date());
-        payment.setCreatedBy("SYSTEM");
+        payment.setCreatedBy(Constant.SYSTEM);
         payment.setPaymentStatus(PaymentStatus.FAILED);
 
         if(StringUtils.hasText(response))

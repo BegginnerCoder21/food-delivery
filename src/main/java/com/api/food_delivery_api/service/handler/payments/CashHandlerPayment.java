@@ -4,9 +4,11 @@ import com.api.food_delivery_api.dto.PaymentRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
+@Service
 public class CashHandlerPayment {
 
     @Autowired

@@ -1,9 +1,11 @@
 package com.api.food_delivery_api.service.impl;
 
+import com.api.food_delivery_api.constante.Constant;
 import com.api.food_delivery_api.dto.UserRequest;
 import com.api.food_delivery_api.dto.UserResponse;
 import com.api.food_delivery_api.entity.Device;
 import com.api.food_delivery_api.entity.User;
+import com.api.food_delivery_api.exeption.UserNotFoundErrorException;
 import com.api.food_delivery_api.repository.DeviceRepository;
 import com.api.food_delivery_api.repository.UserRepository;
 import com.api.food_delivery_api.service.UserService;
@@ -41,17 +43,10 @@ public class UserServiceImpl implements UserService {
 
         User user = this.modelMapper.map(userRequest, User.class);
         user.setCreatedAt(new Date());
+        user.setCreatedBy(Constant.SYSTEM);
 
         this.userRepository.save(user);
 
-        this.saveDevice(userRequest, user);
-
-
-        return null;
-    }
-
-    public void saveDevice(UserRequest userRequest, User user)
-    {
         if(user.getId() != null)
         {
 
@@ -66,10 +61,16 @@ public class UserServiceImpl implements UserService {
                     .user(user)
                     .build();
 
+            model.setCreatedBy(Constant.SYSTEM);
+            model.setCreatedAt(new Date());
+
             System.out.println("here " + user);
             this.deviceRepository.save(model);
 
         }
+
+
+        return this.modelMapper.map(user, UserResponse.class);
     }
 
     @Transactional
@@ -80,7 +81,8 @@ public class UserServiceImpl implements UserService {
 
         if(user.isEmpty())
         {
-            throw new IllegalArgumentException("Utilisation avec ce idientifiant n'existe pas.");
+            log.warn("Utilisateur non trouvé !");
+            throw new UserNotFoundErrorException("Utilisateur non trouvé !");
         }
 
         User userUpdate = user.get();
@@ -193,11 +195,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity delete(Long id) {
+    public ResponseEntity<Object> delete(Long id) {
 
         boolean userExist = this.userRepository.existsById(id);
         if(!userExist){
-            throw new IllegalArgumentException("Utilisateur que vous voulez supprimer n'existe pas !");
+            log.warn("Utilisateur que vous voulez supprimer n'existe pas !");
+            throw new UserNotFoundErrorException("Utilisateur que vous voulez supprimer n'existe pas !");
         }
 
         this.userRepository.deleteById(id);
@@ -211,7 +214,8 @@ public class UserServiceImpl implements UserService {
 
         if (user.isEmpty())
         {
-            throw new IllegalArgumentException("Aucun utilisateur trouvé !");
+            log.warn("Utilisateur non trouvé !");
+            throw new UserNotFoundErrorException("Utilisateur non trouvé !");
         }
 
         User foundUser = user.get();

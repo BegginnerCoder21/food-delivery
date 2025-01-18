@@ -2,10 +2,7 @@ package com.api.food_delivery_api.entity;
 
 import com.api.food_delivery_api.enumeration.OrderStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -16,6 +13,7 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Order extends  BaseEntity{
 
     @Id
@@ -24,6 +22,7 @@ public class Order extends  BaseEntity{
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderDate = new Date();
     @Temporal(TemporalType.TIME)
+    private String orderId;
     private Date deliveryTime;
     private BigDecimal totalAmount;
     private double deliveryFee;

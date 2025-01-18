@@ -18,5 +18,5 @@ public class PaymentRequest {
 
     private PaymentMethod paymentMethod;
 
-    private Long orderId;
+    private String paymentDescription;
 }
