@@ -1,5 +1,6 @@
 package com.api.food_delivery_api.service.impl;
 
+import com.api.food_delivery_api.constante.Constant;
 import com.api.food_delivery_api.dto.OrderItemRequest;
 import com.api.food_delivery_api.dto.OrderRequest;
 import com.api.food_delivery_api.dto.OrderResponse;
@@ -34,6 +35,10 @@ public class OrderServiceImpl implements OrderService {
     private PaymentRepository paymentRepository;
     @Autowired
     private DeliveryRepository deliveryRepository;
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Override
     @Transactional
@@ -106,6 +111,29 @@ public class OrderServiceImpl implements OrderService {
                 .userId(foundUser.getId())
                 .build();
 
+        order.setCreatedAt(new Date());
+        order.setCreatedBy(Constant.SYSTEM);
+
+        log.info("Enregistrement de la commande possedant l'id {}", order.getId());
+        this.orderRepository.save(order);
+
+        for (OrderItemRequest orderItemRequest: orderRequest.getOrderItemRequests())
+        {
+            OrderItem orderItem = OrderItem.builder()
+                    .price(orderItemRequest.getPrice())
+                    .order(order)
+                    .quantity(orderItemRequest.getQuantity())
+                    .menuItemId(null)
+                    .build();
+
+            orderItem.setCreatedAt(new Date());
+            orderItem.setCreatedBy(Constant.SYSTEM);
+
+            log.info("Enregistrement des order items: {}", orderItem);
+
+            this.orderItemRepository.save(orderItem);
+        }
+
         Delivery delivery = Delivery.builder()
                 .orderId(order.getId())
                 .deliveryStatus(DeliveryStatus.PENDING)
@@ -113,10 +141,13 @@ public class OrderServiceImpl implements OrderService {
                 .deliveryAddress(foundUser.getAddress())
                 .deliveryFee(orderRequest.getDeliveryFee())
                 .pickupAddess(foundRestaurant.getLocation())
-                .pickupTime(null)
+                .pickupTime(new Date())
+                .deliveryTime(new Date())
                 .build();
 
-        log.info("Enregistrement de livraison");
+        delivery.setCreatedAt(new Date());
+        delivery.setCreatedBy(Constant.SYSTEM);
+        log.info("Enregistrement de livraison: {}",delivery);
         this.deliveryRepository.save(delivery);
 
         return null;
